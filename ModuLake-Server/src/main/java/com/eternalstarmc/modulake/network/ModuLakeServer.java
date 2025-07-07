@@ -66,7 +66,8 @@ public class ModuLakeServer extends StaticValues {
 
     private void handler (RoutingContext context) {
         HttpServerResponse response = context.response();
-        response.putHeader("Content-Type", "text/html; charset=UTF-8").end("<h1>Solar Website Backend is running!</h1></br><h1>Solar网站后端正在运行！</h1>");
+        response.putHeader("Content-Type", "text/html; charset=UTF-8")
+                .end("<h1>ModuLake is running!</h1></br><h1>ModuLake正处于运行状态！</h1>");
     }
 
     public Router getApiRouter () {
