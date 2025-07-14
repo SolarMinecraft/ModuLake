@@ -21,6 +21,7 @@ public class Main {
     public static final Console CONSOLE = new ConsoleImpl();
     public static final File PLUGINS_FOLDER = new File("./plugins");
     public static final File DATA_FOLDER = new File("./data");
+    public static final File CONFIG_FOLDER = new File("./config");
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     static {
