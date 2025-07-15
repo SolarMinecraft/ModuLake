@@ -32,7 +32,7 @@ public class ApiRoutHandler implements Handler<RoutingContext> {
                 return;
             }
             String handlerName = paths[2];
-            ApiRouter router = API_ROUTER_MANAGER.routers.get(handlerName);
+            ApiRouter router = ((ApiRouterManagerImpl) API_ROUTER_MANAGER).routers.get(handlerName);
             int code = 404;
             Map<String, Object> data;
             HttpMethod method = context.request().method();

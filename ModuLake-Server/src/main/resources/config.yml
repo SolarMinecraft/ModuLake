@@ -1,0 +1,25 @@
+listen:
+  host: 0.0.0.0
+  port: 8080
+
+
+ssl:
+  enable: true
+  key: "%{server_basedir}/key.pem"
+  cert: "%{server_basedir}/cert.pem"
+
+
+websocket:
+  enable: true
+  router: /api
+
+
+plugin:
+  enable: true
+  folder: "%{server_basedir}/plugins"
+  data-folder: "%{server_basedir}/data/%{plugin_name}"
+  config-folder: "%{server_basedir}/config/%{plugin_name}"
+  disabled-plugins:
+    - "ExamplePlugin1"
+    - "ExamplePlugin2"
+    - "ExamplePlugin3"
