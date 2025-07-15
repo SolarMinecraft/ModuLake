@@ -1,5 +1,7 @@
 package com.eternalstarmc.modulake.api.utils.yaml;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -9,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.eternalstarmc.modulake.api.StaticValues.YAML_THREAD_LOCAL;
 
 public class YamlCore {
+    private static final Logger log = LoggerFactory.getLogger(YamlCore.class);
     private final Map<String, Object> data = new ConcurrentHashMap<>();
 
     public YamlCore(File file) throws IOException {
@@ -61,10 +64,19 @@ public class YamlCore {
         Object value = get(path);
         return value != null ? value : defaultValue;
     }
-}
 
-class YamlParseException extends RuntimeException {
-    public YamlParseException(String message, Throwable cause) {
-        super(message, cause);
+    public static YamlCore load(File path) {
+        try {
+            return new YamlCore(path);
+        } catch (IOException e) {
+            log.error("无法加载Yaml文件：{}", path.getName(), e);
+            return null;
+        }
+    }
+
+    public static class YamlParseException extends RuntimeException {
+        public YamlParseException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }
