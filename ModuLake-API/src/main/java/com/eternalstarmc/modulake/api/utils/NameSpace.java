@@ -35,4 +35,9 @@ public class NameSpace {
     public String getKey() {
         return key;
     }
+
+    @Override
+    public int hashCode() {
+        return getNamespace().hashCode();
+    }
 }

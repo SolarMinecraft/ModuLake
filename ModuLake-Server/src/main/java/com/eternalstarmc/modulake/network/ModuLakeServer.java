@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
+import static com.eternalstarmc.modulake.Main.CONFIG;
+import static com.eternalstarmc.modulake.Main.PLACE_HOLDER_MANAGER;
+
 public class ModuLakeServer extends StaticValues {
     private final String host;
     private final int port;
@@ -23,6 +26,7 @@ public class ModuLakeServer extends StaticValues {
     private final Router router;
     private final Router apiRouter;
     private final Server server;
+    private final boolean sslEnabled;
     private static final Logger log = LoggerFactory.getLogger(ModuLakeServer.class);
 
     public ModuLakeServer(String host, int port) {
@@ -51,6 +55,11 @@ public class ModuLakeServer extends StaticValues {
         router.get("/").handler(this::handler);
         httpServer = VERTX.createHttpServer();
         server = new ServerImpl(this.host, this.port, this.address);
+        sslEnabled = CONFIG.getBoolean("ssl.enable");
+        if (sslEnabled) {
+            String key = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.pem"));
+            String cert = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.cert"));
+        }
     }
 
     public Future<HttpServer> start() {

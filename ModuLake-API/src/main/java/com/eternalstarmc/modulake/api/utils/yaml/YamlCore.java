@@ -8,7 +8,6 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 import static com.eternalstarmc.modulake.api.StaticValues.YAML_THREAD_LOCAL;
 
@@ -59,9 +58,13 @@ public class YamlCore {
         return current;
     }
 
-    public <T> T getAs(String path, Class<T> type) {
+    public <T> T getAs(String path, Class<T> type, T defaultValue) {
         Object value = get(path);
-        return type.isInstance(value) ? type.cast(value) : null;
+        return type.isInstance(value) ? type.cast(value) : defaultValue;
+    }
+
+    public <T> T getAs(String path, Class<T> type) {
+        return getAs(path, type, null);
     }
 
     public String getString(String path) {
@@ -69,7 +72,7 @@ public class YamlCore {
     }
 
     public Integer getInt(String path) {
-        return getAs(path, Integer.class);
+        return getAs(path, Integer.class, 0);
     }
 
     public Object get(String path, Object defaultValue) {
@@ -96,6 +99,10 @@ public class YamlCore {
         } catch (IOException e) {
             return exceptionHandler.handle(e);
         }
+    }
+
+    public Boolean getBoolean(String path) {
+        return getAs(path, Boolean.class, false);
     }
 
     public static class YamlParseException extends RuntimeException {
