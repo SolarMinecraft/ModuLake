@@ -3,7 +3,7 @@
     <Appenders>
         <!-- 原有控制台输出 -->
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout charset="GBK" pattern="[ %d{HH:mm:ss} %-5level][ %t ] %msg%n" />
+            <PatternLayout charset="UTF-8" pattern="[ %d{HH:mm:ss} %-5level][ %t ] %msg%n" />
         </Console>
     </Appenders>
 

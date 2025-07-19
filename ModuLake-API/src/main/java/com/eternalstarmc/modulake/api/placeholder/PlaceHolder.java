@@ -11,7 +11,7 @@ public abstract class PlaceHolder {
 
     public PlaceHolder (String name, SubPlaceHolder... holders) {
         for (SubPlaceHolder holder : holders) {
-            this.holders.put(name + "_" + holder.name, holder);
+            this.holders.put(holder.name, holder);
         }
         this.name = name;
     }

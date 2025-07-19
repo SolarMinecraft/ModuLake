@@ -2,6 +2,7 @@ package com.eternalstarmc.modulake;
 
 import com.eternalstarmc.modulake.api.commands.CommandManager;
 import com.eternalstarmc.modulake.api.config.ConfigManager;
+import com.eternalstarmc.modulake.api.dependency.InjectManager;
 import com.eternalstarmc.modulake.api.network.ApiRouterManager;
 import com.eternalstarmc.modulake.api.placeholder.PlaceHolderManager;
 import com.eternalstarmc.modulake.api.plugin.PluginManager;
@@ -10,9 +11,11 @@ import com.eternalstarmc.modulake.api.utils.yaml.YamlCore;
 import com.eternalstarmc.modulake.command.CommandManagerImpl;
 import com.eternalstarmc.modulake.command.ConsoleImpl;
 import com.eternalstarmc.modulake.config.ConfigManagerImpl;
+import com.eternalstarmc.modulake.dependency.InjectManagerImpl;
 import com.eternalstarmc.modulake.network.ApiRouterManagerImpl;
 import com.eternalstarmc.modulake.network.ModuLakeServer;
 import com.eternalstarmc.modulake.placeholder.PlaceHolderManagerImpl;
+import com.eternalstarmc.modulake.placeholder.holders.ServerHolder;
 import com.eternalstarmc.modulake.plugin.PluginManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,7 @@ public class Main {
     public static final CommandManager COMMAND_MANAGER = new CommandManagerImpl();
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
     public static final PlaceHolderManager PLACE_HOLDER_MANAGER = new PlaceHolderManagerImpl();
+    public static final InjectManager INJECT_MANAGER = new InjectManagerImpl();
     public static final Console CONSOLE = new ConsoleImpl();
     public static final File PLUGINS_FOLDER = new File("./plugins");
     public static final File DATA_FOLDER = new File("./data");
@@ -37,6 +41,7 @@ public class Main {
         System.out.println("正在启动 " + Main.class.getName());
         new ExitHook();
         CONFIG = ((ConfigManagerImpl) CONFIG_MANAGER).load("config.yml", true);
+        PLACE_HOLDER_MANAGER.register(new ServerHolder()); // 启动时硬依赖，直接在此注册
         SERVER = new ModuLakeServer(CONFIG.getString("listen.host"), CONFIG.getInt("listen.port"));
     }
 
@@ -47,6 +52,7 @@ public class Main {
         Init.onFirstInit();
         SERVER.start().isComplete();
         System.out.println("加载完成，耗时 " + (System.currentTimeMillis() - start) + " ms，键入 help 或 ? 获取帮助！");
+        System.out.println(PLACE_HOLDER_MANAGER.replacePlaceHolders("%{server_plugins}"));
         ((CommandManagerImpl) COMMAND_MANAGER).startListening();
     }
 }

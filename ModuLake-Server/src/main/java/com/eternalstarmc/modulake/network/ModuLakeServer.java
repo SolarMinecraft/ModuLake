@@ -57,8 +57,10 @@ public class ModuLakeServer extends StaticValues {
         server = new ServerImpl(this.host, this.port, this.address);
         sslEnabled = CONFIG.getBoolean("ssl.enable");
         if (sslEnabled) {
-            String key = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.pem"));
+            String key = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.key"));
             String cert = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.cert"));
+            System.out.println(key);
+            System.out.println(cert);
         }
     }
 

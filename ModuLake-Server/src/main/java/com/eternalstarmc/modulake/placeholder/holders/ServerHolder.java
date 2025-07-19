@@ -4,6 +4,7 @@ import com.eternalstarmc.modulake.api.placeholder.PlaceHolder;
 
 import java.io.File;
 
+import static com.eternalstarmc.modulake.Main.PLUGIN_MANAGER;
 import static com.eternalstarmc.modulake.Main.SERVER;
 
 public class ServerHolder extends PlaceHolder {
@@ -21,6 +22,10 @@ public class ServerHolder extends PlaceHolder {
                 new SubPlaceHolder(
                         "host",
                         s -> SERVER.getHost()
+                ),
+                new SubPlaceHolder(
+                        "plugins",
+                        s -> PLUGIN_MANAGER.getPlugins().toString()
                 )
         );
     }

@@ -5,8 +5,12 @@ import com.eternalstarmc.modulake.api.exception.ExceptionEventBusCodec;
 import com.eternalstarmc.modulake.command.CommandManagerImpl;
 import com.eternalstarmc.modulake.command.commands.CommandRegister;
 import com.eternalstarmc.modulake.config.ConfigManagerImpl;
+import com.eternalstarmc.modulake.dependency.InjectManagerImpl;
+import com.eternalstarmc.modulake.dependency.creators.DependencyCreatorRegister;
 import com.eternalstarmc.modulake.network.ApiRouterManagerImpl;
 import com.eternalstarmc.modulake.network.routers.ServerInfoRouter;
+import com.eternalstarmc.modulake.placeholder.PlaceHolderManagerImpl;
+import com.eternalstarmc.modulake.placeholder.holders.PlaceHolderRegister;
 import com.eternalstarmc.modulake.plugin.PluginLoggerManager;
 import com.eternalstarmc.modulake.plugin.PluginManagerImpl;
 import org.slf4j.Logger;
@@ -33,6 +37,8 @@ public class Init {
         ModuLake.setState(true);
         EVENT_BUS.registerCodec(new ExceptionEventBusCodec());
         init();
+        INJECT_MANAGER.inject(ModuLake.class);
+        System.out.println("依赖注入成功：" + ModuLake.getPlaceHolderManager());
         isFirstInit = false;
     }
 
@@ -55,6 +61,8 @@ public class Init {
         API_ROUTER_MANAGER.registerApiRouter(new ServerInfoRouter());
         PLUGIN_MANAGER.loadPluginsInFolder(PLUGINS_FOLDER);
         CommandRegister.init();
+        PlaceHolderRegister.init();
+        DependencyCreatorRegister.init();
     }
 
     public static void cleanup () {
@@ -62,5 +70,7 @@ public class Init {
         ((ApiRouterManagerImpl) API_ROUTER_MANAGER).cleanup();
         ((PluginManagerImpl) PLUGIN_MANAGER).cleanup();
         ((CommandManagerImpl) COMMAND_MANAGER).cleanup();
+        ((PlaceHolderManagerImpl) PLACE_HOLDER_MANAGER).cleanup();
+        ((InjectManagerImpl) INJECT_MANAGER).cleanup();
     }
 }

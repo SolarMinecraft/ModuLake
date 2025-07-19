@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class PlaceHolderManagerImpl implements PlaceHolderManager {
     private final Map<String, PlaceHolder> placeholders = new ConcurrentHashMap<>();
-    Pattern pattern = Pattern.compile("%\\{(.*?)}");
+    private final Pattern pattern = Pattern.compile("%\\{(.*?)}");
 
     @Override
     public void register(PlaceHolder placeHolder) {
@@ -47,10 +47,15 @@ public class PlaceHolderManagerImpl implements PlaceHolderManager {
             String subHolder = strings[1];
             if (this.placeholders.containsKey(prefix)) {
                 PlaceHolder.SubPlaceHolder subPlaceHolder = this.placeholders.get(prefix).getHolders().get(subHolder);
+                if (subPlaceHolder == null) continue;
                 String result = subPlaceHolder.handler().handle(text);
                 text = text.replace("%{" + placeholder + "}", result);
             }
         }
         return text;
+    }
+
+    public void cleanup() {
+        this.placeholders.clear();
     }
 }
