@@ -5,6 +5,10 @@ import com.eternalstarmc.modulake.api.dependency.DependencyCreator;
 import com.eternalstarmc.modulake.api.placeholder.PlaceHolderManager;
 
 public class PlaceHolderCreator extends DependencyCreator<PlaceHolderManager> {
+    public PlaceHolderCreator() {
+        super(CreatorType.ALL);
+    }
+
     @Override
     public PlaceHolderManager createDependency(Object object) {
         return Main.PLACE_HOLDER_MANAGER;

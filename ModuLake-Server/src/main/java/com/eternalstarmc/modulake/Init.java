@@ -4,7 +4,6 @@ import com.eternalstarmc.modulake.api.ModuLake;
 import com.eternalstarmc.modulake.api.exception.ExceptionEventBusCodec;
 import com.eternalstarmc.modulake.command.CommandManagerImpl;
 import com.eternalstarmc.modulake.command.commands.CommandRegister;
-import com.eternalstarmc.modulake.config.ConfigManagerImpl;
 import com.eternalstarmc.modulake.dependency.InjectManagerImpl;
 import com.eternalstarmc.modulake.dependency.creators.DependencyCreatorRegister;
 import com.eternalstarmc.modulake.network.ApiRouterManagerImpl;
@@ -37,8 +36,6 @@ public class Init {
         ModuLake.setState(true);
         EVENT_BUS.registerCodec(new ExceptionEventBusCodec());
         init();
-        INJECT_MANAGER.inject(ModuLake.class);
-        System.out.println("依赖注入成功：" + ModuLake.getPlaceHolderManager());
         isFirstInit = false;
     }
 
@@ -53,7 +50,7 @@ public class Init {
                 CONFIG.reload();
             } catch (IOException e) {
                 if (e instanceof FileNotFoundException) {
-                    CONFIG = ((ConfigManagerImpl) CONFIG_MANAGER).load("config.yml", true, false);
+                    CONFIG = CONFIG_MANAGER.load("config.yml", true, false);
                 }
                 log.error("无法重新加载配置文件，请检查配置文件状态！");
             }

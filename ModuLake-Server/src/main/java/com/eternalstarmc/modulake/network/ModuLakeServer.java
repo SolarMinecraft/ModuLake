@@ -4,7 +4,9 @@ import com.eternalstarmc.modulake.api.StaticValues;
 import com.eternalstarmc.modulake.api.network.Server;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -16,7 +18,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import static com.eternalstarmc.modulake.Main.CONFIG;
-import static com.eternalstarmc.modulake.Main.PLACE_HOLDER_MANAGER;
 
 public class ModuLakeServer extends StaticValues {
     private final String host;
@@ -53,14 +54,20 @@ public class ModuLakeServer extends StaticValues {
         ApiRoutHandler apiRoutHandler = new ApiRoutHandler();
         apiRouter.route().handler(apiRoutHandler);
         router.get("/").handler(this::handler);
-        httpServer = VERTX.createHttpServer();
         server = new ServerImpl(this.host, this.port, this.address);
         sslEnabled = CONFIG.getBoolean("ssl.enable");
         if (sslEnabled) {
-            String key = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.key"));
-            String cert = PLACE_HOLDER_MANAGER.replacePlaceHolders(CONFIG.getString("ssl.cert"));
+            String key = CONFIG.getString("ssl.key");
+            String cert = CONFIG.getString("ssl.cert");
             System.out.println(key);
             System.out.println(cert);
+            PemKeyCertOptions options = new PemKeyCertOptions().setKeyPath(key).setCertPath(cert);
+            httpServer = VERTX.createHttpServer(new HttpServerOptions().setSsl(true).setKeyCertOptions(options));
+        } else {
+            httpServer = VERTX.createHttpServer();
+        }
+        if (CONFIG.getBoolean("websocket.enable")) {
+            httpServer.webSocketHandler(new WebSocketHandler());
         }
     }
 
@@ -71,6 +78,7 @@ public class ModuLakeServer extends StaticValues {
                 log.info("服务器已成功启动！");
             } else {
                 log.error("服务器无法正常启动：", result.cause());
+                System.exit(1);
             }
         });
     }
@@ -99,6 +107,10 @@ public class ModuLakeServer extends StaticValues {
 
     public Server getServer() {
         return server;
+    }
+
+    public boolean sslEnabled () {
+        return sslEnabled;
     }
 
     public void stop() {

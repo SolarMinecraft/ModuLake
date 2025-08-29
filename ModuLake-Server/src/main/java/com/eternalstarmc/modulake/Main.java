@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake;
 
+import com.eternalstarmc.modulake.api.ModuLake;
 import com.eternalstarmc.modulake.api.commands.CommandManager;
 import com.eternalstarmc.modulake.api.config.ConfigManager;
 import com.eternalstarmc.modulake.api.dependency.InjectManager;
@@ -12,6 +13,7 @@ import com.eternalstarmc.modulake.command.CommandManagerImpl;
 import com.eternalstarmc.modulake.command.ConsoleImpl;
 import com.eternalstarmc.modulake.config.ConfigManagerImpl;
 import com.eternalstarmc.modulake.dependency.InjectManagerImpl;
+import com.eternalstarmc.modulake.dependency.creators.PlaceHolderCreator;
 import com.eternalstarmc.modulake.network.ApiRouterManagerImpl;
 import com.eternalstarmc.modulake.network.ModuLakeServer;
 import com.eternalstarmc.modulake.placeholder.PlaceHolderManagerImpl;
@@ -40,8 +42,10 @@ public class Main {
     static {
         System.out.println("正在启动 " + Main.class.getName());
         new ExitHook();
-        CONFIG = ((ConfigManagerImpl) CONFIG_MANAGER).load("config.yml", true);
+        CONFIG = CONFIG_MANAGER.loadPlaceholderYamlCore("config.yml", true, false);
         PLACE_HOLDER_MANAGER.register(new ServerHolder()); // 启动时硬依赖，直接在此注册
+        INJECT_MANAGER.registerDependencyCreator(new PlaceHolderCreator());
+        INJECT_MANAGER.inject(ModuLake.class);
         SERVER = new ModuLakeServer(CONFIG.getString("listen.host"), CONFIG.getInt("listen.port"));
     }
 
@@ -52,7 +56,6 @@ public class Main {
         Init.onFirstInit();
         SERVER.start().isComplete();
         System.out.println("加载完成，耗时 " + (System.currentTimeMillis() - start) + " ms，键入 help 或 ? 获取帮助！");
-        System.out.println(PLACE_HOLDER_MANAGER.replacePlaceHolders("%{server_plugins}"));
         ((CommandManagerImpl) COMMAND_MANAGER).startListening();
     }
 }
