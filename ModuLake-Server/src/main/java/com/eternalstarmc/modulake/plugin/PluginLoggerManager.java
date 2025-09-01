@@ -1,6 +1,7 @@
 package com.eternalstarmc.modulake.plugin;
 
 import com.eternalstarmc.modulake.api.plugin.PluginBase;
+import com.eternalstarmc.modulake.log.SLF4JPluginLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
