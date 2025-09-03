@@ -59,8 +59,6 @@ public class ModuLakeServer extends StaticValues {
         if (sslEnabled) {
             String key = CONFIG.getString("ssl.key");
             String cert = CONFIG.getString("ssl.cert");
-            System.out.println(key);
-            System.out.println(cert);
             PemKeyCertOptions options = new PemKeyCertOptions().setKeyPath(key).setCertPath(cert);
             httpServer = VERTX.createHttpServer(new HttpServerOptions().setSsl(true).setKeyCertOptions(options));
         } else {

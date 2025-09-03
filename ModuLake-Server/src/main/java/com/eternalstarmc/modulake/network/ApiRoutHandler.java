@@ -1,7 +1,6 @@
 package com.eternalstarmc.modulake.network;
 
 import com.eternalstarmc.modulake.api.network.ApiRouter;
-import com.eternalstarmc.modulake.api.network.ResponseData;
 import com.eternalstarmc.modulake.api.network.RoutingData;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
@@ -42,9 +41,8 @@ public class ApiRoutHandler implements Handler<RoutingContext> {
             }
             else {
                 if (List.of(router.getMethods()).contains(method)) {
-                    ResponseData data1 = router.handler(new RoutingData(context), context.request().method());
-                    data = data1.data();
-                    code = data1.code();
+                    router.handler(new RoutingData(context), context.request().method()); // 转交给Router处理
+                    return;
                 } else {
                     code = 405;
                     data = Map.of("response", "failed",

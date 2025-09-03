@@ -30,6 +30,7 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
         sws.accept();
         String path = sws.path();
         if (path.equals("/ws")) {
+            log.info("WebSocket客户端 ({}) 已连接至服务器", sws.remoteAddress().toString());
             sws.endHandler(v -> {
                 swsMap.remove(sws.remoteAddress().toString());
                 log.info("WebSocket远程客户端已断开连接 ({})", sws.remoteAddress().toString());

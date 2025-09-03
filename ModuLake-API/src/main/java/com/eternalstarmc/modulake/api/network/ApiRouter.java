@@ -11,7 +11,7 @@ public abstract class ApiRouter {
         this.methods = methods;
     }
 
-    public abstract ResponseData handler (RoutingData data, HttpMethod method);
+    public abstract void handler (RoutingData data, HttpMethod method);
 
     public String getRout() {
         return rout;
