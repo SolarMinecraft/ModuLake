@@ -3,14 +3,23 @@
     <Appenders>
         <!-- 原有控制台输出 -->
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout charset="UTF-8" pattern="[ %d{HH:mm:ss} %-5level][ %t ] %msg%n" />
+            <PatternLayout charset="GBK" pattern="[ %d{HH:mm:ss} %-5level][ %t ] %msg%n" />
         </Console>
+
+        <!-- 文件输出，当前日志保存为latest.log -->
+        <RollingFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout charset="GBK" pattern="[ %d{HH:mm:ss} %-5level][ %t ] %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <!-- 设置根日志级别 -->
         <Root level="info">
             <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
         </Root>
     </Loggers>
 </Configuration>

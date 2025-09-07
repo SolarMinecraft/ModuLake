@@ -66,7 +66,7 @@ public class PluginManagerImpl implements PluginManager {
                 plugin.setCommandManager(COMMAND_MANAGER);
                 plugins.put(pluginName, plugin);
                 loaders.put(plugin, clazzLoader);
-                plugin.onEnable0();
+                plugin.onPluginStartup();
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
                      InvocationTargetException e) {
                 ExceptionUtils.handlerException("无法加载插件 " + file.getName() + " ，原因 {}： {}", e);
@@ -166,7 +166,7 @@ public class PluginManagerImpl implements PluginManager {
                 plugin.setCommandManager(COMMAND_MANAGER);
                 plugins.put(pluginName, plugin);
                 loaders.put(plugin, clazzLoader);
-                plugin.onEnable0();
+                plugin.onPluginStartup();
             } catch (Throwable e) {
                 log.error("在加载插件 {} 时发生错误，", value.name, e);
             }
@@ -178,7 +178,7 @@ public class PluginManagerImpl implements PluginManager {
         AbsPlugin plugin = plugins.get(pluginBase.getDescription().name());
         if (plugin == null) return;
         if (plugin.isEnabled()) {
-            plugin.onDisable0();
+            plugin.onServerShutdown();
             loaders.remove(plugin);
             plugins.remove(pluginBase.getDescription().name());
         }
@@ -189,7 +189,7 @@ public class PluginManagerImpl implements PluginManager {
         AbsPlugin plugin = plugins.get(pluginBase.getDescription().name());
         if (plugin == null) return;
         if (plugin.isEnabled()) {
-            plugin.onDisable1();
+            plugin.onHotReload();
         }
     }
 
@@ -198,7 +198,7 @@ public class PluginManagerImpl implements PluginManager {
         AbsPlugin plugin = plugins.get(pluginBase.getDescription().name());
         if (plugin == null) return;
         if (!plugin.isEnabled()) {
-            plugin.onEnable0();
+            plugin.onPluginStartup();
         }
     }
 
@@ -229,7 +229,7 @@ public class PluginManagerImpl implements PluginManager {
     public void cleanup() {
         plugins.forEach(((s, absPlugin) -> {
             if (!s.equals("ModuLake")) {
-                absPlugin.onDisable0();
+                absPlugin.onServerShutdown();
             }
         }));
         loaders.clear();

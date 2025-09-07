@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake.config;
 
+import com.eternalstarmc.modulake.api.API;
 import com.eternalstarmc.modulake.api.config.ConfigManager;
 import com.eternalstarmc.modulake.api.placeholder.PlaceHolderYamlCore;
 import com.eternalstarmc.modulake.api.utils.yaml.YamlCore;
@@ -17,15 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.eternalstarmc.modulake.Main.CONFIG_FOLDER;
 
+@API
 public class ConfigManagerImpl implements ConfigManager {
     private final Map<String, YamlCore> configs = new ConcurrentHashMap<>();
     private static final Logger log = new SLF4JPluginLogger(LoggerFactory.getLogger(ConfigManagerImpl.class), "[ConfigManager] ");
 
+    @API
     @Override
     public YamlCore load (String name, boolean stopServerWhenError) {
         return load(name, stopServerWhenError, true);
     }
 
+    @API
+    @Override
+    public YamlCore load(String name) {
+        return load(name, false);
+    }
+
+    @API
     @Override
     public YamlCore load (String name, boolean stopServerWhenError, boolean readCache) {
         if (CONFIG_FOLDER.mkdir()) log.info("正在创建配置文件夹...");
@@ -47,6 +57,7 @@ public class ConfigManagerImpl implements ConfigManager {
         return null;
     }
 
+    @API
     @Override
     public PlaceHolderYamlCore loadPlaceholderYamlCore (String name, boolean stopServerWhenError, boolean readCache) {
         if (CONFIG_FOLDER.mkdir()) log.info("正在创建配置文件夹...");
@@ -71,6 +82,7 @@ public class ConfigManagerImpl implements ConfigManager {
         return null;
     }
 
+    @API
     public void saveResource (String name, boolean replace) {
         File file = new File(CONFIG_FOLDER, name);
         if (!replace && file.exists()) return;
