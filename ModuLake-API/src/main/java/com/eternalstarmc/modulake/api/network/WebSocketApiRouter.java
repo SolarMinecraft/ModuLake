@@ -1,5 +1,8 @@
 package com.eternalstarmc.modulake.api.network;
 
+import com.eternalstarmc.modulake.api.API;
+
+@API("ABS, WebSocketApiRouter")
 public abstract class WebSocketApiRouter {
     private final String rout;
 
