@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake.command;
 
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.commands.Command;
 import com.eternalstarmc.modulake.api.commands.CommandManager;
 import com.eternalstarmc.modulake.api.plugin.PluginBase;
@@ -15,6 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.eternalstarmc.modulake.Main.CONSOLE;
 
+
+@Impl("COMMAND_SYSTEM, CommandManagerImpl")
 public class CommandManagerImpl implements CommandManager {
     private final Map<NameSpace, Command> commands = new ConcurrentHashMap<>();
     private final Map<String, Command> stringCommands = new ConcurrentHashMap<>();

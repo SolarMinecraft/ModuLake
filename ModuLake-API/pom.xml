@@ -21,7 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version> <!-- 使用适合你项目的版本 -->
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

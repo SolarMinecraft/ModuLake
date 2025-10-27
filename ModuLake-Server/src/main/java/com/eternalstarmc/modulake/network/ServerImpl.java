@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake.network;
 
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.network.Server;
 import com.eternalstarmc.modulake.api.plugin.PluginBase;
 import com.eternalstarmc.modulake.api.plugin.PluginManager;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import static com.eternalstarmc.modulake.Main.PLUGIN_MANAGER;
 
+
+@Impl("NETWORK, ServerImpl")
 public record ServerImpl(String host, int port, InetAddress listeningAddress) implements Server {
 
     @Override

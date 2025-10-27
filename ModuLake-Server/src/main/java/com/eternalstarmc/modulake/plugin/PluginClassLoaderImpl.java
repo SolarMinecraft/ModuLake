@@ -1,6 +1,7 @@
 package com.eternalstarmc.modulake.plugin;
 
 import com.eternalstarmc.modulake.Main;
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.plugin.AbsPlugin;
 import com.eternalstarmc.modulake.api.plugin.PluginClassLoader;
 
@@ -10,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.eternalstarmc.modulake.Main.PLUGIN_MANAGER;
 
+
+@Impl("PLUGIN_SYSTEM, PluginClassLoaderImpl")
 public class PluginClassLoaderImpl extends PluginClassLoader {
     private final Map<AbsPlugin, PluginClassLoaderImpl> dependencies = new ConcurrentHashMap<>();
 

@@ -1,6 +1,7 @@
 package com.eternalstarmc.modulake.config;
 
 import com.eternalstarmc.modulake.api.API;
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.config.ConfigManager;
 import com.eternalstarmc.modulake.api.placeholder.PlaceHolderYamlCore;
 import com.eternalstarmc.modulake.api.utils.yaml.YamlCore;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.eternalstarmc.modulake.Main.CONFIG_FOLDER;
 
-@API
+@Impl("CFG_SYSTEM, ConfigManagerImpl")
 public class ConfigManagerImpl implements ConfigManager {
     private final Map<String, YamlCore> configs = new ConcurrentHashMap<>();
     private static final Logger log = new SLF4JPluginLogger(LoggerFactory.getLogger(ConfigManagerImpl.class), "[ConfigManager] ");

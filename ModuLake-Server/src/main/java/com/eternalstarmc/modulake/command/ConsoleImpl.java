@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake.command;
 
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.commands.Command;
 import com.eternalstarmc.modulake.api.plugin.PluginBase;
 import com.eternalstarmc.modulake.api.senders.Console;
@@ -11,6 +12,9 @@ import java.util.UUID;
 
 import static com.eternalstarmc.modulake.Main.COMMAND_MANAGER;
 
+
+
+@Impl("COMMAND_SYSTEM, ConsoleImpl")
 public class ConsoleImpl extends Console {
     private final UUID uuid;
     private static final Logger logger = LoggerFactory.getLogger(ConsoleImpl.class);

@@ -1,6 +1,7 @@
 package com.eternalstarmc.modulake.plugin;
 
 import com.eternalstarmc.modulake.Main;
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.StaticValues;
 import com.eternalstarmc.modulake.api.exception.ExceptionUtils;
 import com.eternalstarmc.modulake.api.exception.PluginLoadingException;
@@ -18,6 +19,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.eternalstarmc.modulake.Main.COMMAND_MANAGER;
 
+
+
+@Impl("PLUGIN_SYSTEM, PluginManagerImpl")
 public class PluginManagerImpl implements PluginManager {
     private static final Logger log = LoggerFactory.getLogger(PluginManagerImpl.class);
 

@@ -1,5 +1,6 @@
 package com.eternalstarmc.modulake.dependency;
 
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.dependency.DependencyCreator;
 import com.eternalstarmc.modulake.api.dependency.Inject;
 import com.eternalstarmc.modulake.api.dependency.InjectManager;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+
+@Impl("DPC_SYSTEM, InjectManagerImpl")
 public class InjectManagerImpl implements InjectManager {
     private static final Logger log = LoggerFactory.getLogger(InjectManagerImpl.class);
     private final Map<Class<?>, DependencyCreator<?>> dependenciesAll = new ConcurrentHashMap<>();

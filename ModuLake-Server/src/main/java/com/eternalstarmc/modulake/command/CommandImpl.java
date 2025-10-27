@@ -1,11 +1,14 @@
 package com.eternalstarmc.modulake.command;
 
+import com.eternalstarmc.modulake.api.Impl;
 import com.eternalstarmc.modulake.api.commands.Command;
 import com.eternalstarmc.modulake.api.commands.CommandHandler;
 import com.eternalstarmc.modulake.api.commands.CommandSender;
 import com.eternalstarmc.modulake.api.plugin.PluginBase;
 import com.eternalstarmc.modulake.api.utils.NameSpace;
 
+
+@Impl("COMMAND_SYSTEM, CommandImpl")
 public class CommandImpl implements Command {
     private final NameSpace nameSpace;
     private final String name;
