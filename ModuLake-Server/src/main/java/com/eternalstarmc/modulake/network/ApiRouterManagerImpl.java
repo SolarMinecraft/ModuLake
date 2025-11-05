@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Impl("NETWORK, ApiRouterManagerImpl")
 public class ApiRouterManagerImpl implements ApiRouterManager {
-    protected Map<String, ApiRouter> routers = new ConcurrentHashMap<>();
+    protected final Map<String, ApiRouter> routers = new ConcurrentHashMap<>();
 
     public void cleanup () {
         routers.clear();

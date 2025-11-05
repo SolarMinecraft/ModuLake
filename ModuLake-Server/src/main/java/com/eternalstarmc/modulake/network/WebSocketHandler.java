@@ -1,6 +1,7 @@
 package com.eternalstarmc.modulake.network;
 
 import com.eternalstarmc.modulake.api.network.WebSocketApiRouter;
+import com.eternalstarmc.modulake.api.network.WebSocketBasicRouter;
 import com.eternalstarmc.modulake.api.network.WebSocketRequestContext;
 import com.eternalstarmc.modulake.api.network.WebSocketResponseData;
 import com.eternalstarmc.modulake.api.utils.ByteBufUtils;
@@ -16,12 +17,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.eternalstarmc.modulake.Main.WEB_SOCKET_ROUTER_MANAGER;
 import static com.eternalstarmc.modulake.api.StaticValues.GSON;
 import static com.eternalstarmc.modulake.api.StaticValues.TYPE;
 
 public class WebSocketHandler implements Handler<ServerWebSocket> {
     private static final Logger log = LoggerFactory.getLogger(WebSocketHandler.class);
-    private final Map<String, WebSocketApiRouter> wsApiRouters = new ConcurrentHashMap<>();
     private final Map<String, ServerWebSocket> swsMap = new ConcurrentHashMap<>();
 
 
@@ -44,24 +45,32 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
                             case 0 -> {
                                 String msg = ByteBufUtils.readString(byteB);
                                 Map<String, Object> data = GSON.fromJson(msg, TYPE);
-                                if (data.get("rout") == null) {
+                                if (data.get("route") == null) {
                                     sws.write(Buffer.buffer().appendInt(0).appendString(GSON.toJson(Map.of("response", "failed",
                                             "msg", "Bad WS Request!"))));
                                     return;
                                 }
-                                String rout = data.get("rout").toString();
-                                WebSocketApiRouter router = wsApiRouters.get(rout);
+                                String route = data.get("route").toString();
+                                WebSocketApiRouter router = ((WebSocketRouterManagerImpl) WEB_SOCKET_ROUTER_MANAGER).wsApiRouters.get(route);
                                 if (router == null) {
                                     sws.write(Buffer.buffer().appendInt(0).appendString(GSON.toJson(Map.of("response", "failed",
                                             "msg", "Not Found!"))));
                                     return;
                                 }
-                                data.remove("rout");
+                                data.remove("route");
                                 WebSocketResponseData responseData = router.handler(new WebSocketRequestContext(data));
                                 sws.write(Buffer.buffer().appendInt(0).appendString(responseData.getData()));
                             }
                             case 1 -> {
-                                //TODO: 处理二进制数据包
+                                String route = ByteBufUtils.readString(byteB);
+                                WebSocketBasicRouter basicRouter = ((WebSocketRouterManagerImpl) WEB_SOCKET_ROUTER_MANAGER).wsBasicRouters.get(route);
+                                if (basicRouter == null) {
+                                    sws.write(Buffer.buffer().appendInt(0).appendString(GSON.toJson(Map.of("response", "failed",
+                                            "msg", "Not Found!"))));
+                                    return;
+                                }
+                                Buffer response = basicRouter.handler(byteB);
+                                sws.write(Buffer.buffer().appendInt(1).appendBuffer(response));
                             }
                         }
                     }
@@ -75,14 +84,6 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
         }
         sws.end(Buffer.buffer().appendInt(0).appendString(GSON.toJson(Map.of("response", "failed",
                 "msg", "Unknown access ws path!"))));
-    }
-
-    public void registerWSApiRouter (WebSocketApiRouter router) {
-        this.wsApiRouters.put(router.getRout(), router);
-    }
-
-    public WebSocketApiRouter getWSApiRouter (String rout) {
-        return this.wsApiRouters.get(rout);
     }
 
     public ServerWebSocket getWebSocketConnection (String address) {
