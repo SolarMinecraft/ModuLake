@@ -36,6 +36,10 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
                 swsMap.remove(sws.remoteAddress().toString());
                 log.info("WebSocket远程客户端已断开连接 ({})", sws.remoteAddress().toString());
             });
+            sws.exceptionHandler(v -> {
+                swsMap.remove(sws.remoteAddress().toString());
+                log.error("WebSocket远程客户端与服务器连接出现异常\n", v.getCause());
+            });
             sws.handler(buffer -> {
                 try {
                     if (buffer instanceof BufferImpl nBuffer) { // 转换为BufferImpl以获取Netty ByteBuf
