@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ModuLake {
     private static final ModuLakeKernel modulakeApiKernel = new ModuLakeKernel();
     private static boolean state = false;
-    public static final String apiVersion = "Modulake-API Snapshot 1.0";
+    public static final String apiVersion = "Modulake-API PRE-RELEASE v1";
     @Inject
     private static PlaceHolderManager placeHolderManager;
 
