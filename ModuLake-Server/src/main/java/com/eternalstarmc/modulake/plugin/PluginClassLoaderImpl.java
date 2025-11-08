@@ -9,8 +9,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.eternalstarmc.modulake.Main.PLUGIN_MANAGER;
-
 
 @Impl("PLUGIN_SYSTEM, PluginClassLoaderImpl")
 public class PluginClassLoaderImpl extends PluginClassLoader {
@@ -22,16 +20,21 @@ public class PluginClassLoaderImpl extends PluginClassLoader {
     }
 
     @Override
-    protected Class<?> findClass (String name) throws ClassNotFoundException {
-        try {return super.findClass(name);} catch (ClassNotFoundException ignored) {}
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        try {
+            return super.findClass(name);
+        } catch (ClassNotFoundException ignored) {}
 
-        PluginManagerImpl manager = (PluginManagerImpl) PLUGIN_MANAGER;
-        for (AbsPlugin absPlugin : manager.getPluginsMap().values()) {
-            PluginClassLoaderImpl loader = (PluginClassLoaderImpl) absPlugin.getClassLoader();
-            return loader.findClass0(name);
+        // 遍历所有依赖，直到找到类或全部检查完
+        for (PluginClassLoaderImpl clazzLoader : dependencies.values()) {
+            try {
+                return clazzLoader.findClass0(name);
+            } catch (ClassNotFoundException ignored) {
+            }
         }
         throw new ClassNotFoundException(name);
     }
+
 
     protected Class<?> findClass0 (String name) throws ClassNotFoundException {
         return super.findClass(name);

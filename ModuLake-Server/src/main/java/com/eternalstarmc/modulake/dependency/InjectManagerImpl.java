@@ -74,6 +74,7 @@ public class InjectManagerImpl implements InjectManager {
                 log.warn("无法为 {} 创建依赖，请检查是否已注册依赖创建器，需注入依赖的类实例 {}", type, object);
                 return null;
             }
+            return creator.createDependency(object);
         }
         creator = dependenciesAll.get(type);
         if (creator == null) {
@@ -88,5 +89,6 @@ public class InjectManagerImpl implements InjectManager {
 
     public void cleanup() {
         dependenciesAll.clear();
+        dependenciesOnly.clear();
     }
 }
