@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,8 @@ public class ApiRoutHandler implements Handler<RoutingContext> {
         } else {
             HttpServerResponse response = context.response();
             response.putHeader("Content-Type", "application/json; Charset=UTF-8");
-            String[] paths = context.request().path().split("/");
+            String normalizedPath = context.request().path().replaceAll("/+$", "");
+            String[] paths = normalizedPath.split("/");
             if (paths.length < 3) {
                 response.setStatusCode(404).end(GSON.toJson(Map.of("response", "failed",
                         "msg", "Not found!")));
@@ -47,6 +49,8 @@ public class ApiRoutHandler implements Handler<RoutingContext> {
                     code = 405;
                     data = Map.of("response", "failed",
                             "msg", "Method not allowed!");
+                    String allowHeader = String.join(", ", Arrays.stream(router.getMethods()).map(HttpMethod::name).toList());
+                    response.putHeader("Allow", allowHeader);
                 }
             }
             response.setStatusCode(code).end(GSON.toJson(data));

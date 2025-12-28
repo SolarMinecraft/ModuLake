@@ -21,22 +21,34 @@ public class PluginClassLoaderImpl extends PluginClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        Class<?> loadedClass = findLoadedClass(name);
+        if (loadedClass != null) {
+            return loadedClass;
+        }
         try {
-            return super.findClass(name);
+            loadedClass = super.findClass(name);
         } catch (ClassNotFoundException ignored) {}
-
-        // 遍历所有依赖，直到找到类或全部检查完
-        for (PluginClassLoaderImpl clazzLoader : dependencies.values()) {
-            try {
-                return clazzLoader.findClass0(name);
-            } catch (ClassNotFoundException ignored) {
+        if (loadedClass == null) {
+            for (PluginClassLoaderImpl clazzLoader : dependencies.values()) {
+                try {
+                    loadedClass = clazzLoader.findClass0(name);
+                    if (loadedClass != null) break;
+                } catch (ClassNotFoundException ignored) {
+                }
             }
         }
-        throw new ClassNotFoundException(name);
+
+        if (loadedClass == null) {
+            throw new ClassNotFoundException(name);
+        }
+        return loadedClass;
     }
 
-
     protected Class<?> findClass0 (String name) throws ClassNotFoundException {
+        Class<?> loadedClass = findLoadedClass(name);
+        if (loadedClass != null) {
+            return loadedClass;
+        }
         return super.findClass(name);
     }
 
